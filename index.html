@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#070B14">
+    <title>GutS Rocket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Ikon SVG (inline, gaya garis) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 24 24"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+</svg>
+
+<!-- HALAMAN MASUK -->
+<div id="auth-page" class="page-container">
+    <div class="auth-card">
+        <div class="brand-mark"><svg class="icon"><use href="#i-rocket"/></svg></div>
+        <h1>GutS Rocket</h1>
+        <p class="sub">Masuk dengan Secret Key dari bot WhatsApp.</p>
+        <label class="field-label" for="input-secret-key">Secret Key</label>
+        <div class="input-wrapper">
+            <svg class="icon icon-sm"><use href="#i-key"/></svg>
+            <input type="password" id="input-secret-key" class="value-input" placeholder="GUTS-XXXX-XXXX" autocomplete="off">
+        </div>
+        <button id="btn-login" class="btn btn-launch btn-block">Masuk</button>
+        <p class="hint">Belum punya akun? Kirim <b>.secretkey</b> melalui chat pribadi ke GutS Bot untuk mendaftar.</p>
+    </div>
+</div>
+
+<!-- HALAMAN APLIKASI -->
+<div id="app-page" class="page-container" style="display: none;">
+
+    <!-- TAB GAME -->
+    <div id="tab-game" class="tab-content active">
+        <div class="game-wrapper">
+            <div class="game-board rocket-board">
+                <canvas id="starfield" aria-hidden="true"></canvas>
+                <div class="multiplier-display">
+                    <h2 id="rocket-multiplier">1.00x</h2>
+                    <p id="rocket-status">Siap meluncur</p>
+                </div>
+                <div class="rocket-container" id="rocket-container">
+                    <img src="rocket.png" class="rocket" id="rocket-img" alt="Roket" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3254/3254095.png'">
+                    <div class="exhaust-flame" id="rocket-flame"></div>
+                </div>
+            </div>
+
+            <div class="dashboard">
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <span class="label">Saldo</span>
+                        <span class="value" id="rocket-display-balance">Memuat…</span>
+                    </div>
+                    <div class="stat-box">
+                        <label class="label" for="input-rocket-bet">Jumlah taruhan</label>
+                        <div class="input-wrapper">
+                            <span class="currency">$</span>
+                            <input type="number" id="input-rocket-bet" class="value-input" value="5000" min="1000" step="1000">
+                        </div>
+                    </div>
+                </div>
+                <div class="control-row">
+                    <button class="btn btn-launch" id="btn-rocket-bet">Luncurkan</button>
+                    <button class="btn btn-cashout" id="btn-rocket-cashout">Cairkan</button>
+                </div>
+                <p class="hint">Taruhan minimal $1,000. Cairkan sebelum roket meledak untuk mengamankan kemenangan.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB ADMIN -->
+    <div id="tab-secret" class="tab-content" style="display: none;">
+        <div class="admin-panel">
+            <h2 class="panel-title"><svg class="icon"><use href="#i-radar"/></svg>Monitor Admin</h2>
+            <p class="sub">Pantau dan atur penerbangan secara langsung.</p>
+
+            <div class="trap-box">
+                <h3><svg class="icon icon-sm"><use href="#i-target"/></svg>Atur titik meledak pra-peluncuran</h3>
+                <input type="number" id="trap-target" class="text-input" placeholder="Nomor target (628xxx)">
+                <input type="number" id="trap-cp" class="text-input" placeholder="Titik meledak (contoh: 1.05)" step="0.01">
+                <button onclick="setTrap()" class="btn btn-accent btn-block">Simpan pengaturan</button>
+            </div>
+
+            <div id="admin-live-flights" class="flight-list">
+                <p class="empty-msg">Memuat penerbangan aktif…</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB PROFIL -->
+    <div id="tab-profile" class="tab-content" style="display: none;">
+        <div class="profile-wrapper">
+            <div class="profile-card">
+                <img id="profile-pp" src="https://telegra.ph/file/24fa902ead26340f3df2c.png" alt="Foto profil" class="profile-avatar">
+                <h2 id="profile-name">Player</h2>
+                <p id="profile-number" class="sub">@628xxx</p>
+
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <span class="label">Saldo</span>
+                        <span class="value" id="profile-money">$0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="label">Level</span>
+                        <span class="value" id="profile-level">Lv. 1</span>
+                    </div>
+                </div>
+
+                <div class="stat-box key-box">
+                    <span class="label">Secret Key</span>
+                    <span class="value" id="profile-key">GUTS-XXXX-XXXX</span>
+                </div>
+
+                <button id="btn-reveal-secret" class="btn btn-ghost btn-block"><svg class="icon icon-sm"><use href="#i-shield"/></svg>Buka panel admin</button>
+                <button id="btn-logout" class="btn btn-cashout btn-block"><svg class="icon icon-sm"><use href="#i-logout"/></svg>Keluar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGASI -->
+    <nav class="bottom-nav" aria-label="Navigasi utama">
+        <button class="nav-item active" data-target="tab-game">
+            <svg class="icon"><use href="#i-rocket"/></svg>
+            <span class="nav-text">Rocket</span>
+        </button>
+        <button class="nav-item" data-target="tab-secret" id="nav-secret" style="display: none;">
+            <svg class="icon"><use href="#i-radar"/></svg>
+            <span class="nav-text">Admin</span>
+        </button>
+        <button class="nav-item" data-target="tab-profile">
+            <svg class="icon"><use href="#i-user"/></svg>
+            <span class="nav-text">Profil</span>
+        </button>
+    </nav>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
